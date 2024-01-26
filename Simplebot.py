@@ -39,6 +39,8 @@ import brickpi3 #import BrickPi.py file to use BrickPi operations
 
 import curses   # import curses for text processing
 
+import keyboard # import keyboard for more responsive polling (i think requires sudo)
+
 # set up curses interface
 
 stdscr = curses.initscr()
@@ -47,13 +49,19 @@ curses.noecho()
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 motorR = BP.PORT_B # right motor
 motorL = BP.PORT_C # left motor
-speed = 100   # range is -255 to 255, make lower if bot it too fast
+speed = 50# range is -255 to 255, make lower if bot it too fast
 #Move Forward
 
 def fwd():
         BP.set_motor_power(motorR,speed)
+        
         BP.set_motor_power(motorL,speed)
+ #       time.sleep(0.1)
+        
 
+ #       BP.set_motor_power(motorR,0)
+
+#        BP.set_motor_power(motorL,0)
 #Move Left
 def left():
         BP.set_motor_power(motorL, speed)
@@ -68,32 +76,46 @@ def right():
 def back():
         BP.set_motor_power(motorR, -speed)
         BP.set_motor_power(motorL, -speed)
-
+#Move diagonal Forward-Right
+def diag_FR():
+        BP.set_motor_power(motorR, speed/2)
+        BP.set_motor_power(motorL, speed)
 #Stop
 def stop():
         BP.set_motor_power(motorR, 0)
         BP.set_motor_power(motorL, 0)
 
 while True:
-        inp = stdscr.getkey() #Take input from the terminal
         #Move the bot
-        if inp == 'w':
+        if keyboard.is_pressed("w"):
+            while keyboard.is_pressed("w"):
                 fwd()
                 print("fwd")
-
-        elif inp=='a' :
+            stop()
+        elif keyboard.is_pressed("e"):
+            while keyboard.is_pressed("e"):
+                diag_FR()
+                print("diag-forw-right")
+            stop()
+        elif keyboard.is_pressed("a") :
+            while keyboard.is_pressed("a"):
                 left()
                 print("left")
+            stop()
 
-        elif inp=='d':
+        elif keyboard.is_pressed("d"):
+            while keyboard.is_pressed("d"):
                 right()
                 print("right")
+            stop()
 
-        elif inp=='s':
+        elif keyboard.is_pressed("s"):
+            while keyboard.is_pressed("s"):
                 back()
                 print("back")
+            stop()
 
-        elif inp=='x':
+        elif keyboard.is_pressed("x"):
                 stop()
 
         time.sleep(.01)         # sleep for 10 ms
