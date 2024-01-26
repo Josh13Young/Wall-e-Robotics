@@ -47,8 +47,8 @@ stdscr = curses.initscr()
 curses.noecho()
 
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
-motorR = BP.PORT_B # right motor
-motorL = BP.PORT_C # left motor
+motorR = BP.PORT_C # right motor
+motorL = BP.PORT_B # left motor
 speed = 50# range is -255 to 255, make lower if bot it too fast
 #Move Forward
 
@@ -62,13 +62,13 @@ def fwd():
  #       BP.set_motor_power(motorR,0)
 
 #        BP.set_motor_power(motorL,0)
-#Move Left
-def left():
+#Move Right
+def right():
         BP.set_motor_power(motorL, speed)
         BP.set_motor_power(motorR, -speed)
 
-#Move Right
-def right():
+#Move Left
+def left():
         BP.set_motor_power(motorL, -speed)
         BP.set_motor_power(motorR, speed)
 
@@ -80,6 +80,18 @@ def back():
 def diag_FR():
         BP.set_motor_power(motorR, speed/2)
         BP.set_motor_power(motorL, speed)
+#Move diagonal Forward-Left
+def diag_FL():
+        BP.set_motor_power(motorR, speed)
+        BP.set_motor_power(motorL, speed/2)
+#Move diagonal Back-Right
+def diag_BR():
+        BP.set_motor_power(motorR, -speed/2)
+        BP.set_motor_power(motorL, -speed)
+#Move diagonal Back-Right
+def diag_BL():
+        BP.set_motor_power(motorR, -speed)
+        BP.set_motor_power(motorL, -speed/2)
 #Stop
 def stop():
         BP.set_motor_power(motorR, 0)
@@ -90,32 +102,52 @@ while True:
         if keyboard.is_pressed("w"):
             while keyboard.is_pressed("w"):
                 fwd()
-                print("fwd")
+                print("fwd\n")
             stop()
-        elif keyboard.is_pressed("e"):
+        if keyboard.is_pressed("e"):
             while keyboard.is_pressed("e"):
                 diag_FR()
-                print("diag-forw-right")
+                print("diag-forw-right\n")
             stop()
-        elif keyboard.is_pressed("a") :
+        if keyboard.is_pressed("w+d"):
+            while keyboard.is_pressed("w+d"):
+                diag_FR()
+                print("diag-forw-right\n")
+            stop()
+        if keyboard.is_pressed("w+a"):
+            while keyboard.is_pressed("w+a"):
+                diag_FL()
+                print("diag-forw-left\n")
+            stop()
+        if keyboard.is_pressed("s+a"):
+            while keyboard.is_pressed("s+a"):
+                diag_BL()
+                print("diag-back-left\n")
+            stop()
+        if keyboard.is_pressed("s+d"):
+            while keyboard.is_pressed("s+d"):
+                diag_BR()
+                print("diag-back-right\n")
+            stop()
+        if keyboard.is_pressed("a") :
             while keyboard.is_pressed("a"):
                 left()
-                print("left")
+                print("left\n")
             stop()
 
-        elif keyboard.is_pressed("d"):
+        if keyboard.is_pressed("d"):
             while keyboard.is_pressed("d"):
                 right()
-                print("right")
+                print("right\n")
             stop()
 
-        elif keyboard.is_pressed("s"):
+        if keyboard.is_pressed("s"):
             while keyboard.is_pressed("s"):
                 back()
-                print("back")
+                print("back\n")
             stop()
 
-        elif keyboard.is_pressed("x"):
+        if keyboard.is_pressed("x"):
                 stop()
 
         time.sleep(.01)         # sleep for 10 ms
