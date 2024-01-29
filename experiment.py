@@ -32,7 +32,7 @@
 # we add these libraries to give us the ability to use sleep func
 
 # use Brick Pi 3 stuff and the curses interface (it makes input easier and consistent)
-from star import encoder_reached
+#from star import encoder_reached
 import time
 
 import brickpi3 #import BrickPi.py file to use BrickPi operations
@@ -64,18 +64,18 @@ def fwdS():
         #BP.set_motor_power(motorL,speed)
         BP.set_motor_position(motorR, pos_r + 800)
         BP.set_motor_position(motorL, pos_l + 800)
-        while not (encoder_reached(pos_r + 800, motorR) and encoder_reached(pos_l + 800, motorL)):
-               time.sleep(0.1)
+  #      while not (encoder_reached(pos_r + 800, motorR) and encoder_reached(pos_l + 800, motorL)):
+   #            time.sleep(0.1)
 #Move Left
 def left():
         pos_r = BP.get_motor_encoder(motorR)
         pos_l = BP.get_motor_encoder(motorL)
         #BP.set_motor_power(motorL, speed)
         #BP.set_motor_power(motorR, -speed)
-        BP.set_motor_position(motorR, pos_r - 270)
-        BP.set_motor_position(motorL, pos_l + 270)
-        while not (encoder_reached(pos_r - 270, motorR) and encoder_reached(pos_l + 270, motorL)):
-               time.sleep(0.1)
+        BP.set_motor_position(motorR, pos_r - 260)
+        BP.set_motor_position(motorL, pos_l + 260)
+#        while not (encoder_reached(pos_r - 260, motorR) and encoder_reached(pos_l + 260, motorL)):
+ #              time.sleep(0.1)
 
 #Move Right
 def right():
@@ -83,8 +83,8 @@ def right():
         #BP.set_motor_power(motorR, speed)
         pos_r = BP.get_motor_encoder(motorR)
         pos_l = BP.get_motor_encoder(motorL)
-        BP.set_motor_position(motorR, pos_r + 270)
-        BP.set_motor_position(motorL, pos_l - 270)
+        BP.set_motor_position(motorR, pos_r + 250)
+        BP.set_motor_position(motorL, pos_l - 250)
 
 #Move backward
 def back():
@@ -102,38 +102,35 @@ def stop():
 
 def square():
         for i in range(4):
-                fwd()
+                fwdS()
+                time.sleep(1.5)
                 left()
-try:
-        while True:
-                inp = stdscr.getkey() #Take input from the terminal
-                #Move the bot
-                if inp == 'w':
-                        fwd()
-                        print("fwd\n")
+                time.sleep(1)
 
-                elif inp=='a' :
-                        left()
-                        print("left\n")
+while True:
+    inp = stdscr.getkey() #Take input from the terminal
+    #Move the bot
+    if inp == 'w':
+        fwd()
+        print("fwd\n")
+    elif inp=='a' :
+        left()
+        print("left\n")
+    elif inp=='d':
+        right()
+        print("right\n")
+    elif inp=='s':
+        back()
+        print("back\n")
 
-                elif inp=='d':
-                        right()
-                        print("right\n")
+    elif inp=='t':
+        fwdS()
+        print("40cm\n")
+    elif inp =='y':
+        square()
+        print("square\n")
+    elif inp=='x':
+         stop()
+    time.sleep(.01)         # sleep for 10 ms
 
-                elif inp=='s':
-                        back()
-                        print("back\n")
-                elif inp=='t':
-                        fwdS()
-                        print("40cm\n")
-                elif inp =='y':
-                        square()
-                        print("square\n")
-
-                elif inp=='x':
-                        stop()
-
-                time.sleep(.01)         # sleep for 10 ms
-except KeyboardInterrupt:
-        BP.reset_all()
 
