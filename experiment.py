@@ -52,7 +52,8 @@ speed = 100   # range is -255 to 255, make lower if bot it too fast
 
 BP.set_motor_limits(motorR, 70)
 BP.set_motor_limits(motorL, 70)
-rotation = 253
+rotation = 256
+
 
 def fwd():
         pos_r = BP.get_motor_encoder(motorR)
@@ -66,8 +67,8 @@ def fwdS():
         pos_l = BP.get_motor_encoder(motorL)
         #BP.set_motor_power(motorR,speed)
         #BP.set_motor_power(motorL,speed)
-        BP.set_motor_position(motorR, pos_r + 810)
-        BP.set_motor_position(motorL, pos_l + 810)
+        BP.set_motor_position(motorR, pos_r + 833)
+        BP.set_motor_position(motorL, pos_l + 833)
   #      while not (encoder_reached(pos_r + 800, motorR) and encoder_reached(pos_l + 800, motorL)):
    #            time.sleep(0.1)
 #Move Left
