@@ -114,18 +114,18 @@ while True:
                 diag_FR()
                 print("diag-forw-right\n")
             stop()
-        if keyboard.is_pressed("w+a"):
-            while keyboard.is_pressed("w+a"):
+        if keyboard.is_pressed("q"):
+            while keyboard.is_pressed("q"):
                 diag_FL()
                 print("diag-forw-left\n")
             stop()
-        if keyboard.is_pressed("s+a"):
-            while keyboard.is_pressed("s+a"):
+        if keyboard.is_pressed("z"):
+            while keyboard.is_pressed("z"):
                 diag_BL()
                 print("diag-back-left\n")
             stop()
-        if keyboard.is_pressed("s+d"):
-            while keyboard.is_pressed("s+d"):
+        if keyboard.is_pressed("c"):
+            while keyboard.is_pressed("c"):
                 diag_BR()
                 print("diag-back-right\n")
             stop()

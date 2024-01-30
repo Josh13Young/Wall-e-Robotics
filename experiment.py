@@ -47,8 +47,12 @@ curses.noecho()
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 motorR = BP.PORT_B # right motor
 motorL = BP.PORT_C # left motor
-speed = 360   # range is -255 to 255, make lower if bot it too fast
+speed = 100   # range is -255 to 255, make lower if bot it too fast
 #Move Forward
+
+BP.set_motor_limits(motorR, 70)
+BP.set_motor_limits(motorL, 70)
+rotation = 253
 
 def fwd():
         pos_r = BP.get_motor_encoder(motorR)
@@ -62,8 +66,8 @@ def fwdS():
         pos_l = BP.get_motor_encoder(motorL)
         #BP.set_motor_power(motorR,speed)
         #BP.set_motor_power(motorL,speed)
-        BP.set_motor_position(motorR, pos_r + 800)
-        BP.set_motor_position(motorL, pos_l + 800)
+        BP.set_motor_position(motorR, pos_r + 810)
+        BP.set_motor_position(motorL, pos_l + 810)
   #      while not (encoder_reached(pos_r + 800, motorR) and encoder_reached(pos_l + 800, motorL)):
    #            time.sleep(0.1)
 #Move Left
@@ -72,8 +76,8 @@ def left():
         pos_l = BP.get_motor_encoder(motorL)
         #BP.set_motor_power(motorL, speed)
         #BP.set_motor_power(motorR, -speed)
-        BP.set_motor_position(motorR, pos_r - 260)
-        BP.set_motor_position(motorL, pos_l + 260)
+        BP.set_motor_position(motorR, pos_r - rotation)
+        BP.set_motor_position(motorL, pos_l + rotation)
 #        while not (encoder_reached(pos_r - 260, motorR) and encoder_reached(pos_l + 260, motorL)):
  #              time.sleep(0.1)
 
