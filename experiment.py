@@ -5,27 +5,26 @@ from Bot import PositionControlBot, Bot
 
 
 def task1_control_loop(posBot: "PositionControlBot", letter: str):
-    match letter:
-        case "w":
-            print("Moving forward")
-            posBot.move_forward()
-        case "a":
-            print("Turning left")
-            posBot.turn_left()
-        case "s":
-            print("Moving backward")
-            posBot.move_backward()
-        case "d":
-            print("Turning right")
-            posBot.turn_right()
-        case "y":
-            print("Moving in a square")
-            posBot.move_square()
-        case "x":
-            print("Stopping")
-            posBot.stop()
-        case _:
-            print(f"Unknown command: {letter}")
+    if letter == "w":
+        print("Moving forward")
+        posBot.move_forward()
+    elif letter == "a":
+        print("Turning left")
+        posBot.turn_left()
+    elif letter == "s":
+        print("Moving backward")
+        posBot.move_backward()
+    elif letter == "d":
+        print("Turning right")
+        posBot.turn_right()
+    elif letter == "y":
+        print("Moving in a square")
+        posBot.move_square()
+    elif letter == "x":
+        print("Stopping")
+        posBot.stop()
+    else:
+        print(f"Unknown command: {letter}")
 
 
 class ControlProcedure:
