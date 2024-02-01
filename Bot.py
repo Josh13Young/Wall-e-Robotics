@@ -23,10 +23,10 @@ class Bot:
         self.BP.set_motor_position(self.motorR, position)
 
     def get_right_position(self) -> int:
-        self.BP.get_motor_encoder(self.motorR)
+        return self.BP.get_motor_encoder(self.motorR)
 
     def get_left_position(self) -> int:
-        self.BP.get_motor_encoder(self.motorL)
+        return self.BP.get_motor_encoder(self.motorL)
 
 
 class ControlBot(ABC):
@@ -91,22 +91,22 @@ class PositionControlBot(ControlBot):
         self.bot.set_right_position(curr_r + right_displacement)
         return self
 
-    def move_forward(self, distance: int = None) -> "PositionControlBot":
+    def move_forward(self, distance= None) -> "PositionControlBot":
         if distance == None:
             distance = self.base_move_dist
         return self._move(distance, distance)
 
-    def move_backward(self, distance: int = None) -> "PositionControlBot":
+    def move_backward(self, distance= None) -> "PositionControlBot":
         if distance == None:
             distance = self.base_move_dist
         return self._move(-distance, -distance)
 
-    def turn_left(self, amount: int = None) -> "PositionControlBot":
+    def turn_left(self, amount= None) -> "PositionControlBot":
         if amount == None:
             amount = self.turn_amount
         return self._move(amount, -amount)
 
-    def turn_right(self, amount: int = None) -> "PositionControlBot":
+    def turn_right(self, amount= None) -> "PositionControlBot":
         if amount == None:
             amount = self.turn_amount
         return self._move(-amount, amount)
@@ -117,3 +117,4 @@ class PositionControlBot(ControlBot):
             time.sleep(1.5)
             self.turn_left(turn_amount)
             time.sleep(1)
+        return self
