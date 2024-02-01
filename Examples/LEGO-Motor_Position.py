@@ -9,9 +9,9 @@
 #
 # This code is an example for running a motor to a target position set by the encoder of another motor.
 # 
-# Hardware: Connect EV3 or NXT motors to the BrickPi3 motor ports B and C. Make sure that the BrickPi3 is running on a 9v power supply.
+# Hardware: Connect EV3 or NXT motors to the BrickPi3 motor ports A and D. Make sure that the BrickPi3 is running on a 9v power supply.
 #
-# Results:  When you run this program, motor C power will be controlled by the position of motor B. Manually rotate motor B, and motor C's power will change.
+# Results:  When you run this program, motor A will run to match the position of motor D. Manually rotate motor D, and motor A will follow.
 
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
@@ -23,25 +23,27 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 
 try:
     try:
-        BP.offset_motor_encoder(BP.PORT_B, BP.get_motor_encoder(BP.PORT_B)) # reset encoder B
+        BP.offset_motor_encoder(BP.PORT_A, BP.get_motor_encoder(BP.PORT_A)) # reset encoder A
+        BP.offset_motor_encoder(BP.PORT_D, BP.get_motor_encoder(BP.PORT_D)) # reset encoder D
     except IOError as error:
         print(error)
     
+    BP.set_motor_power(BP.PORT_D, BP.MOTOR_FLOAT)    # float motor D
+    BP.set_motor_limits(BP.PORT_A, 50, 200)          # optionally set a power limit (in percent) and a speed limit (in Degrees Per Second)
     while True:
-        # The following BP.get_motor_encoder function returns the encoder value (what we want to use to control motor C's power).
+        # Each of the following BP.get_motor_encoder functions returns the encoder value.
         try:
-            power = BP.get_motor_encoder(BP.PORT_B) / 10
-            if power > 100:
-                power = 100
-            elif power < -100:
-                power = -100
+            target = BP.get_motor_encoder(BP.PORT_D) # read motor D's position
         except IOError as error:
             print(error)
-            power = 0
-        BP.set_motor_power(BP.PORT_C, power)
-        print("Motor B Status: ", BP.get_motor_status(BP.PORT_B))
-        print("Motor C Status: ", BP.get_motor_status(BP.PORT_C))
-
+        
+        BP.set_motor_position(BP.PORT_A, target)    # set motor A's target position to the current position of motor D
+        
+        try:
+            print("Motor A target: %6d  Motor A position: %6d" % (target, BP.get_motor_encoder(BP.PORT_A)))
+        except IOError as error:
+            print(error)
+        
         time.sleep(0.02)  # delay for 0.02 seconds (20ms) to reduce the Raspberry Pi CPU load.
 
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
