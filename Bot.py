@@ -1,4 +1,6 @@
 import brickpi3
+import graph
+import random
 
 from abc import ABC
 import time
@@ -115,6 +117,22 @@ class PositionControlBot(ControlBot):
         for _ in range(4):
             self.move_forward(forward_dist)
             time.sleep(1.5)
+            self.turn_left(turn_amount)
+            time.sleep(1)
+        return self
+    
+    def move_square_10(self, forward_dist=833, turn_amount=256) -> "PositionControlBot":
+        graph.square_graph()
+        particles = [(0, 0, 0) for _ in range(100)]
+        weights = [1/len(particles) for _ in range(len(particles))]
+        random.gauss(0, 0.05)
+
+        for _ in range(4):
+            for _ in range(4):
+                self.move_forward(forward_dist/4)
+                time.sleep(1)
+                for i in range(100):
+                    print ("drawParticles:" + str(particles))
             self.turn_left(turn_amount)
             time.sleep(1)
         return self

@@ -27,6 +27,9 @@ def task1_control_loop(posBot: "PositionControlBot", letter: str):
     elif letter == "y":
         curse_print("Moving in a square")
         posBot.move_square()
+    elif letter == "u":
+        curse_print("Moving in a square every 10cm")
+        posBot.move_square_10()
     elif letter == "x":
         curse_print("Stopping")
         posBot.stop()
