@@ -1,5 +1,6 @@
 from bot_control.Bot import Bot, ControlBot
 
+
 class PowerControlBot(ControlBot):
     def __init__(self, bot: Bot, speed):
         super().__init__(bot)

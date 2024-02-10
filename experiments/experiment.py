@@ -5,6 +5,7 @@ from Bot import PowerControlBot, PositionControlBot, Bot
 
 global_stdscr = None
 
+
 def curse_print(text):
     global_stdscr.clear()
     global_stdscr.addstr(0, 0, text)
@@ -55,7 +56,7 @@ def main(stdscr):
 
     bot = Bot()
     posControlBot = PowerControlBot(bot, 50)
-    
+
     def control_loop_fn(inp: str):
         task1_control_loop(posControlBot, inp)
 

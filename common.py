@@ -21,9 +21,9 @@ class CursesState:
 
 def main_wrapper(main):
     def signal_handler(_, __):
-        curses.nocbreak() 
+        curses.nocbreak()
         curses.echo()
-        curses.endwin() 
+        curses.endwin()
         Bot.reset_bp()
         exit(0)
 
