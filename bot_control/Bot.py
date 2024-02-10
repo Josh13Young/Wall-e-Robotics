@@ -2,25 +2,29 @@ import brickpi3
 import random
 
 from abc import ABC
+from collections import namedtuple
 import time
+
+MotorStatus = namedtuple(
+    "MotorStatus", ["status_flag", "power_percent", "encoder_pos", "velocity_dps"]
+)
 
 
 class Bot:
-    BPs = []
+    BP = None
 
     @staticmethod
-    def reset_all_bps():
-        for bp in Bot.BPs:
-            bp.reset_all()
+    def reset_bp():
+        if Bot.BP:
+            Bot.BP.reset_all()
 
     def __init__(self):
         self.BP = brickpi3.BrickPi3()
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
 
-        self.BPs.append(self.BP)
-
     def reset_encoders(self):
+        Bot.reset_bp()
         lpos = self.get_left_position()
         rpos = self.get_right_position()
 
@@ -48,6 +52,18 @@ class Bot:
 
     def get_left_position(self) -> int:
         return self.BP.get_motor_encoder(self.motorL)
+
+    def get_left_status(self) -> MotorStatus:
+        return MotorStatus(*self.BP.get_motor_status(self.motorL))
+
+    def get_right_status(self) -> MotorStatus:
+        return MotorStatus(*self.BP.get_motor_status(self.motorR))
+
+    def get_left_velocity_dps(self) -> int:
+        return self.get_left_status().velocity_dps
+
+    def get_right_velocity_dps(self) -> int:
+        return self.get_right_status().velocity_dps
 
 
 class ControlBot(ABC):

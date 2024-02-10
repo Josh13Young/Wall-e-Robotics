@@ -17,7 +17,7 @@ def main_wrapper(main):
         curses.nocbreak() 
         curses.echo()
         curses.endwin() 
-        Bot.reset_all_bps()
+        Bot.reset_bp()
         exit(0)
 
     def wrap(local_stdscr):

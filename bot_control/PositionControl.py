@@ -13,6 +13,14 @@ class PositionControlBot(ControlBot):
     def _move(
         self, right_displacement: int, left_displacement: int
     ) -> "PositionControlBot":
+        # loop while we're still moving
+        dps_l = self.bot.get_left_velocity_dps()
+        dps_r = self.bot.get_right_velocity_dps()
+        while dps_l != 0 or dps_r != 0:
+          time.sleep(0.1)
+          dps_l = self.bot.get_left_velocity_dps()
+          dps_r = self.bot.get_right_velocity_dps()
+        
         curr_l = self.bot.get_left_position()
         curr_r = self.bot.get_right_position()
         self.bot.set_left_position(curr_l + left_displacement)

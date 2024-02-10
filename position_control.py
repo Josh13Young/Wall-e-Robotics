@@ -3,10 +3,6 @@ from bot_control.PositionControl import PositionControlBot, Bot
 
 
 def control_loop(posBot: PositionControlBot, letter: str):
-    lpos = posBot.bot.get_left_position()
-    rpos = posBot.bot.get_right_position()
-    print(lpos, rpos)
-    
     if letter == "w":
         curse_print("Moving forward")
         posBot.move_forward()
@@ -19,6 +15,9 @@ def control_loop(posBot: PositionControlBot, letter: str):
     elif letter == "d":
         curse_print("Turning right")
         posBot.turn_right()
+    elif letter == "y":
+        curse_print("Moving in a square")
+        posBot.move_square()
     elif letter == "x":
         curse_print("Stopping")
         posBot.stop()
