@@ -3,6 +3,10 @@ from bot_control.PositionControl import PositionControlBot, Bot
 
 
 def control_loop(posBot: PositionControlBot, letter: str):
+    lpos = posBot.bot.get_left_position()
+    rpos = posBot.bot.get_right_position()
+    print(lpos, rpos)
+    
     if letter == "w":
         curse_print("Moving forward")
         posBot.move_forward()
