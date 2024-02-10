@@ -1,4 +1,9 @@
-from common import main_wrapper, curse_print, ControlProcedure
+"""
+The robot utilises the touch sensors to avoid obstacles, if it is hit head on
+  it'll move in a random direction
+"""
+
+from common import main_wrapper, curse_print
 from bot_control.Bot import Bot
 from bot_control.PositionControl import PositionControlBot
 from bot_control.VelocityControl import VelocityControlBot

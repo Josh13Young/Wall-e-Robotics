@@ -12,6 +12,13 @@ from dataclasses import dataclass
 from bot_control.Bot import Bot
 
 
+def cleanup():
+    curses.nocbreak()
+    curses.echo()
+    curses.endwin()
+    Bot.reset_bp()
+
+
 @dataclass
 class CursesState:
     stdscr: curses.window
@@ -21,10 +28,7 @@ class CursesState:
 
 def main_wrapper(main):
     def signal_handler(_, __):
-        curses.nocbreak()
-        curses.echo()
-        curses.endwin()
-        Bot.reset_bp()
+        cleanup()
         exit(0)
 
     def wrap(local_stdscr):
@@ -48,7 +52,11 @@ def curse_print(text):
 
 
 def curse_getkey():
-    return CursesState.stdscr.getkey()
+    try:
+        return CursesState.stdscr.getkey()
+    except:
+        cleanup()
+        exit(0)
 
 
 def curse_noecho():

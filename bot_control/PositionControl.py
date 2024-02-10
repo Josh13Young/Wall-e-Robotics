@@ -8,13 +8,11 @@ class PositionControlBot(ControlBot):
         self,
         bot: Bot,
         base_move_dist: int = 800,
-        turn_amount: int = 250,
-        motor_limit: int = 50,
+        turn_amount: int = 250
     ):
         super().__init__(bot)
         self.base_move_dist = base_move_dist
         self.turn_amount = turn_amount
-        self.bot.set_motor_limits(motor_limit)
 
     def _move(
         self, right_displacement: int, left_displacement: int
