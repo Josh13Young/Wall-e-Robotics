@@ -20,3 +20,7 @@ def curse_print(text):
 
 def curse_getkey():
     return stdscr.getkey()
+
+
+def curse_noecho():
+    curses.noecho()

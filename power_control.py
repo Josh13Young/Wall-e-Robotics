@@ -1,4 +1,4 @@
-from common import main_wrapper, curse_print, curse_getkey, curses
+from common import main_wrapper, curse_print, curse_getkey, curse_noecho
 import time
 
 from Bot import PowerControlBot, Bot
@@ -27,7 +27,7 @@ def control_loop(posBot: PowerControlBot, letter: str):
 class ControlProcedure:
     def __init__(self, control_loop_fn):
         self.control_loop_fn = control_loop_fn
-        curses.noecho()
+        curse_noecho()
 
     def start_procedure(self):
         while True:
