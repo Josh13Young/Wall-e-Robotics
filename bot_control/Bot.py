@@ -1,5 +1,4 @@
 import brickpi3
-import graph
 import random
 
 from abc import ABC
@@ -7,11 +6,27 @@ import time
 
 
 class Bot:
+    BPs = []
+
+    @staticmethod
+    def reset_all_bps():
+        for bp in Bot.BPs:
+            bp.reset_all()
+
     def __init__(self):
         self.BP = brickpi3.BrickPi3()
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
-        
+
+        self.BPs.append(self.BP)
+
+    def reset_encoders(self):
+        lpos = self.get_left_position()
+        rpos = self.get_right_position()
+
+        self.BP.offset_motor_encoder(self.motorL, lpos)
+        self.BP.offset_motor_encoder(self.motorR, rpos)
+
     def set_motor_limits(self, motor_limit: int):
         self.BP.set_motor_limits(self.motorL, motor_limit)
         self.BP.set_motor_limits(self.motorR, motor_limit)

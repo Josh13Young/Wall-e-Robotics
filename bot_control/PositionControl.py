@@ -8,12 +8,13 @@ class PositionControlBot(ControlBot):
         self.base_move_dist = base_move_dist
         self.turn_amount = turn_amount
         self.bot.set_motor_limits(motor_limit)
+        self.bot.reset_encoders()
 
     def _move(
         self, right_displacement: int, left_displacement: int
     ) -> "PositionControlBot":
-        curr_r = self.bot.get_left_position()
-        curr_l = self.bot.get_right_position()
+        curr_l = self.bot.get_left_position()
+        curr_r = self.bot.get_right_position()
         self.bot.set_left_position(curr_l + left_displacement)
         self.bot.set_right_position(curr_r + right_displacement)
         return self
