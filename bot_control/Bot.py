@@ -11,6 +11,10 @@ class Bot:
         self.BP = brickpi3.BrickPi3()
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
+        
+    def set_motor_limits(self, motor_limit: int):
+        self.BP.set_motor_limits(self.motorL, motor_limit)
+        self.BP.set_motor_limits(self.motorR, motor_limit)
 
     def set_left_power(self, power: int):
         self.BP.set_motor_power(self.motorL, power)

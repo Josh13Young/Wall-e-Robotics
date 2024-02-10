@@ -3,10 +3,11 @@ import time
 from bot_control.Bot import Bot, ControlBot
 
 class PositionControlBot(ControlBot):
-    def __init__(self, bot: Bot, base_move_dist: int = 800, turn_amount: int = 250):
+    def __init__(self, bot: Bot, base_move_dist: int = 800, turn_amount: int = 250, motor_limit: int = 50):
         super().__init__(bot)
         self.base_move_dist = base_move_dist
         self.turn_amount = turn_amount
+        self.bot.set_motor_limits(motor_limit)
 
     def _move(
         self, right_displacement: int, left_displacement: int
