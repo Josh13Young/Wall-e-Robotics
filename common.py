@@ -1,4 +1,5 @@
 import curses
+import time
 
 stdscr: curses.window
 
@@ -24,3 +25,15 @@ def curse_getkey():
 
 def curse_noecho():
     curses.noecho()
+
+
+class ControlProcedure:
+    def __init__(self, control_loop_fn):
+        self.control_loop_fn = control_loop_fn
+        curse_noecho()
+
+    def start_procedure(self):
+        while True:
+            inp = curse_getkey()
+            self.control_loop_fn(inp)
+            time.sleep(0.1)

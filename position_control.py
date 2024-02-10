@@ -1,10 +1,8 @@
-from common import main_wrapper, curse_print, curse_getkey, curse_noecho
-import time
-
-from bot_control.PowerControl import PowerControlBot, Bot
+from common import main_wrapper, curse_print, ControlProcedure
+from bot_control.PositionControl import PositionControlBot, Bot
 
 
-def control_loop(posBot: PowerControlBot, letter: str):
+def control_loop(posBot: PositionControlBot, letter: str):
     if letter == "w":
         curse_print("Moving forward")
         posBot.move_forward()
@@ -24,21 +22,9 @@ def control_loop(posBot: PowerControlBot, letter: str):
         curse_print(f"Unknown command: {letter}")
 
 
-class ControlProcedure:
-    def __init__(self, control_loop_fn):
-        self.control_loop_fn = control_loop_fn
-        curse_noecho()
-
-    def start_procedure(self):
-        while True:
-            inp = curse_getkey()
-            self.control_loop_fn(inp)
-            time.sleep(0.1)
-
-
 def main():
     bot = Bot()
-    posControlBot = PowerControlBot(bot, 50)
+    posControlBot = PositionControlBot(bot, 300)
 
     def control_loop_fn(inp: str):
         control_loop(posControlBot, inp)
