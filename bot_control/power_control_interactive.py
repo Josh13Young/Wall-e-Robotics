@@ -1,7 +1,7 @@
 from common import main_wrapper, curse_print, curse_getkey, curse_noecho
 import time
 
-from Bot import PowerControlBot, Bot
+from bot_control.PowerControl import PowerControlBot, Bot
 
 
 def control_loop(posBot: PowerControlBot, letter: str):
