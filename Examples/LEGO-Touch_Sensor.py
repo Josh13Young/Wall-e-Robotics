@@ -21,12 +21,14 @@ import brickpi3 # import the BrickPi3 drivers
 
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 
+port = BP.PORT_4
+
 # Configure for a touch sensor.
 # If an EV3 touch sensor is connected, it will be configured for EV3 touch, otherwise it's configured for NXT touch.
 # BP.set_sensor_type configures the BrickPi3 for a specific sensor.
 # BP.PORT_1 specifies that the sensor will be on sensor port 1.
 # BP.SENSOR_TYPE.TOUCH specifies that the sensor will be a touch sensor.
-BP.set_sensor_type(BP.PORT_1, BP.SENSOR_TYPE.TOUCH)
+BP.set_sensor_type(port, BP.SENSOR_TYPE.TOUCH)
 
 try:
     while True:
@@ -35,7 +37,7 @@ try:
         # BP.PORT_1 specifies that we are looking for the value of sensor port 1.
         # BP.get_sensor returns the sensor value (what we want to display).
         try:
-            value = BP.get_sensor(BP.PORT_1)
+            value = BP.get_sensor(port)
             print(value)
         except brickpi3.SensorError as error:
             print(error)

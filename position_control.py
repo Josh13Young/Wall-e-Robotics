@@ -1,3 +1,12 @@
+"""
+This demonstrates the code for Practical 1, specifically via:
+```
+posBot.move_square(forward_dist=833, turn_amount=250)
+```
+This makes the robot move in a square using position control, callibrated by
+  our empirically derived values
+"""
+
 from common import main_wrapper, curse_print, ControlProcedure
 from bot_control.PositionControl import PositionControlBot, Bot
 
@@ -17,7 +26,7 @@ def control_loop(posBot: PositionControlBot, letter: str):
         posBot.turn_right()
     elif letter == "y":
         curse_print("Moving in a square")
-        posBot.move_square()
+        posBot.move_square(forward_dist=833, turn_amount=250)
     elif letter == "x":
         curse_print("Stopping")
         posBot.stop()

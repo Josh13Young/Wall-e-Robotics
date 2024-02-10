@@ -1,3 +1,10 @@
+"""
+Various bits of helpful code, focusing on wrapping around curses,
+  since curses is how we're getting user input from the terminal
+  without sudo, and it appears to mess up display formatting if you
+  also try to use print
+"""
+
 import curses
 import time
 import signal
