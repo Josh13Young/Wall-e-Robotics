@@ -24,20 +24,22 @@ class Bot:
             Bot.BP = self.BP
         else:
             self.BP = Bot.BP
-            
-        Bot.reset_bp() # ensure everything is unconfigured
-        
+
+        Bot.reset_bp()  # ensure everything is unconfigured
+
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
 
         self.touchSensorR = self.BP.PORT_1
         self.touchSensorL = self.BP.PORT_4
-        
+
         self.ultrasonicSensor = self.BP.PORT_3
 
         self.BP.set_sensor_type(self.touchSensorR, self.BP.SENSOR_TYPE.TOUCH)
         self.BP.set_sensor_type(self.touchSensorL, self.BP.SENSOR_TYPE.TOUCH)
-        self.BP.set_sensor_type(self.ultrasonicSensor, self.BP.SENSOR_TYPE.NXT_ULTRASONIC)
+        self.BP.set_sensor_type(
+            self.ultrasonicSensor, self.BP.SENSOR_TYPE.NXT_ULTRASONIC
+        )
 
         self.reset_encoders()
         self.reset_motor_power()
@@ -98,17 +100,17 @@ class Bot:
 
     def get_right_touch_sensor_value(self) -> int:
         return self.BP.get_sensor(self.touchSensorR)
-      
+
     def get_ultrasonic_sensor_value(self) -> int:
         """Returns distance of obstacle in front of sensor (up to 255cm away)"""
         value = None
         while value == None:
-          try:
-            reading = self.BP.get_sensor(self.BP.PORT_3)
-            value = reading
-          except brickpi3.SensorError:
-            pass
-          time.sleep(0.02)
+            try:
+                reading = self.BP.get_sensor(self.BP.PORT_3)
+                value = reading
+            except brickpi3.SensorError:
+                pass
+            time.sleep(0.02)
         return value
 
 
