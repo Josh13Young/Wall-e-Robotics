@@ -98,4 +98,11 @@ class ControlBot(ABC):
 
     def stop(self):
         self.bot.reset_motor_power()
-
+        
+    def wait_for_movement_completion(self):
+        dps_l = self.bot.get_left_velocity_dps()
+        dps_r = self.bot.get_right_velocity_dps()
+        while dps_l != 0 or dps_r != 0:
+            time.sleep(0.1)
+            dps_l = self.bot.get_left_velocity_dps()
+            dps_r = self.bot.get_right_velocity_dps()

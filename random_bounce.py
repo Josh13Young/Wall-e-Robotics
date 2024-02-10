@@ -3,46 +3,65 @@ from bot_control.Bot import Bot
 from bot_control.PositionControl import PositionControlBot
 from bot_control.VelocityControl import VelocityControlBot
 import time
+import random
 
-
-def control_loop(posBot: PositionControlBot, velBot: VelocityControlBot, letter: str):
-    if letter == "w":
+def control_loop(bot: Bot, posBot: PositionControlBot, velBot: VelocityControlBot):
+    # short sleep to allow the motors to accelerate a bit before the next command
+    short_sleep = lambda: time.sleep(0.3)
+    
+    # very short sleep to add a short delay between motor commands
+    very_short_sleep = lambda: time.sleep(0.05)
+    short_sleep()
+    
+    velBot.go_forwards()
+  
+    while True:
+      very_short_sleep()
+      
+      left_val = bot.get_left_touch_sensor_value()
+      right_val = bot.get_right_touch_sensor_value()
+      
+      if left_val or right_val:
         velBot.stop()
-        time.sleep(0.1)
-        curse_print("Moving forward (using velocity control)")
+        very_short_sleep()
+        curse_print("We hit something")
+        
+        if left_val and right_val:
+          curse_print("It was in front of us")
+          posBot.move_backward()
+          short_sleep()
+          
+          if random.randint(0, 100) % 2:
+            posBot.turn_left()
+            curse_print("We'll turn left")
+          else:
+            posBot.turn_right()
+            curse_print("We'll turn right")
+        elif left_val:
+          curse_print("It was to our left, so we'll go back and turn right")
+          posBot.move_backward()
+          short_sleep()
+          posBot.turn_right()
+        elif right_val:
+          curse_print("It was to our right, so we'll go back and turn left")
+          posBot.move_backward()
+          short_sleep()
+          posBot.turn_left()
+        
+        short_sleep()
+        posBot.wait_for_movement_completion()
+        very_short_sleep()
+        
+        curse_print("And we'll start moving forward again")
         velBot.go_forwards()
-    elif letter == "a":
-        velBot.stop()
-        time.sleep(0.1)
-        curse_print("Turning left (using position control)")
-        posBot.turn_left()
-    elif letter == "s":
-        velBot.stop()
-        time.sleep(0.1)
-        curse_print("Moving backward (using velocity control)")
-        velBot.go_backwards()
-    elif letter == "d":
-        velBot.stop()
-        time.sleep(0.1)
-        curse_print("Turning right (using position control)")
-        posBot.turn_right()
-    elif letter == "x":
-        curse_print("Stopping")
-        posBot.stop()
-    else:
-        curse_print(f"Unknown command: {letter}")
 
 
 def main():
     bot = Bot()
-    posControlBot = PositionControlBot(bot, 50)
-    velControlBot = VelocityControlBot(bot, 120)
+    posControlBot = PositionControlBot(bot, 400)
+    velControlBot = VelocityControlBot(bot, 200)
 
-    def control_loop_fn(inp: str):
-        control_loop(posControlBot, velControlBot, inp)
-
-    control_proc = ControlProcedure(control_loop_fn)
-    control_proc.start_procedure()
+    control_loop(bot, posControlBot, velControlBot)
 
 
 if __name__ == "__main__":
