@@ -15,7 +15,6 @@ class PositionControlBot(ControlBot):
         self.base_move_dist = base_move_dist
         self.turn_amount = turn_amount
         self.bot.set_motor_limits(motor_limit)
-        self.bot.reset_encoders()
 
     def _move(
         self, right_displacement: int, left_displacement: int

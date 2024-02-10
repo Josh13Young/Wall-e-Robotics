@@ -22,6 +22,15 @@ class Bot:
         self.BP = brickpi3.BrickPi3()
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
+        
+        self.touchSensorR = self.BP.PORT_1
+        self.touchSensorL = self.BP.PORT_4
+        
+        self.BP.set_sensor_type(self.touchSensorR, self.BP.SENSOR_TYPE.TOUCH)
+        self.BP.set_sensor_type(self.touchSensorL, self.BP.SENSOR_TYPE.TOUCH)
+        
+        self.reset_encoders()
+        self.reset_motor_power()
 
     def reset_encoders(self):
         Bot.reset_bp()
@@ -30,6 +39,10 @@ class Bot:
 
         self.BP.offset_motor_encoder(self.motorL, lpos)
         self.BP.offset_motor_encoder(self.motorR, rpos)
+
+    def reset_motor_power(self):
+        self.set_left_power(0)
+        self.set_right_power(0)
 
     def set_motor_limits(self, motor_limit: int):
         self.BP.set_motor_limits(self.motorL, motor_limit)
@@ -58,12 +71,25 @@ class Bot:
 
     def get_right_status(self) -> MotorStatus:
         return MotorStatus(*self.BP.get_motor_status(self.motorR))
+      
+    def set_left_velocity_dps(self, velocity_dps: int):
+        self.BP.set_motor_dps(self.motorL, velocity_dps)
+      
+    def set_right_velocity_dps(self, velocity_dps: int):
+        self.BP.set_motor_dps(self.motorR, velocity_dps)
 
     def get_left_velocity_dps(self) -> int:
         return self.get_left_status().velocity_dps
 
     def get_right_velocity_dps(self) -> int:
         return self.get_right_status().velocity_dps
+      
+    def get_left_touch_sensor_value(self) -> int:
+        return self.BP.get_sensor(self.touchSensorL)
+      
+    def get_right_touch_sensor_value(self) -> int:
+        return self.BP.get_sensor(self.touchSensorR)
+
 
 
 class ControlBot(ABC):
@@ -71,5 +97,5 @@ class ControlBot(ABC):
         self.bot = bot
 
     def stop(self):
-        self.bot.set_left_power(0)
-        self.bot.set_right_power(0)
+        self.bot.reset_motor_power()
+
