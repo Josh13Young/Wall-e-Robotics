@@ -14,7 +14,7 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 motorR = BP.PORT_B # right motor
 motorL = BP.PORT_C # left motor
 speed = 360   # range is -255 to 255, make lower if bot it too fast
-x_global, y_global, theta_global = 0, 0, 0
+x, y, theta = 0, 0, 0
 #Move Forward
 
 def fwd():
@@ -48,8 +48,11 @@ def stop():
 def navigateToWaypoint(wx, wy):
     meter = 2082.5
     rotate = 1080
-    x_new, y_new = wx - x_global, wy - y_global
-    angle = math.degrees(math.atan(y_new/x_new)) + (270 - theta_global)
+    global x
+    global y
+    global theta
+    x_new, y_new = wx - x, wy - y
+    angle = math.degrees(math.atan(y_new/x_new)) + (270 - theta)
     dist = math.sqrt(x_new**2 + y_new**2)
     pos_r = BP.get_motor_encoder(motorR)
     pos_l = BP.get_motor_encoder(motorL)
@@ -64,7 +67,7 @@ def navigateToWaypoint(wx, wy):
     pos_l = BP.get_motor_encoder(motorL)
     BP.set_motor_position(motorR, pos_r + motorDriveAmount)
     BP.set_motor_position(motorL, pos_l + motorDriveAmount)
-    x_global, y_global, theta_global = wx, wy, angle
+    x, y, theta = wx, wy, angle
     time.sleep(4)
 
 
