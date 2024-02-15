@@ -70,7 +70,7 @@ class PositionControlBot(ControlBot):
         for _ in range(4):
             for _ in range(4):
                 self.move_forward(ten_cm)
-                time.sleep(1)
+
                 for i in range(len(particles)):
                     e = random.gauss(0, 0.02)
                     f = random.gauss(0, 0.015)
@@ -82,7 +82,7 @@ class PositionControlBot(ControlBot):
                     particle = tuple(lst)
                     particles[i] = particle
                 print("drawParticles:" + str(particles))
-
+                time.sleep(1.5)
             self.turn_left(turn_amount)
             for i in range(len(particles)):
                 g = random.gauss(0, 0.01)
@@ -91,5 +91,5 @@ class PositionControlBot(ControlBot):
                 particle = tuple(lst)
                 particles[i] = particle
             print("drawParticles:" + str(particles))
-            time.sleep(1)
+            time.sleep(1.5)
         return self

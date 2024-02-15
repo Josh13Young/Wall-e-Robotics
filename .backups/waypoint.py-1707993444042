@@ -36,6 +36,10 @@ def navigateToWaypoint(wx, wy):
     dist = math.sqrt(x_new**2 + y_new**2)
     pos_r = BP.get_motor_encoder(motorR)
     pos_l = BP.get_motor_encoder(motorL)
+#    if (angle > 180):
+#        angle -= 180
+#    elif (angle < 180):
+#        angle += 180
 
     motorDriveAmount = meter * dist
     print("angle: " + str(angle))
