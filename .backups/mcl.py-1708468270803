@@ -164,11 +164,7 @@ def navigateToWaypoint(x, y, theta, wx, wy):
     time.sleep(1)
 
     total_move = motorDriveAmount
-    """
-    Extract the division of 20 centimeter steps outside of this function, so that it moves 20cms
-    then calculates the average x, y and theta of the particles and uses this as it's next position to start from
-    
-    """
+
     while total_move > centimeter * 20:
         pos_r = BP.get_motor_encoder(motorR)
         pos_l = BP.get_motor_encoder(motorL)
@@ -184,7 +180,7 @@ def navigateToWaypoint(x, y, theta, wx, wy):
     thing()
     nx, ny, ntheta = get_avgs()
     time.sleep(1)
-    #return wx, wy, theta + angle
+    # return wx, wy, theta + angle
     return nx, ny, ntheta
 
 # TODO: change name of 
@@ -215,9 +211,9 @@ try:
     #while True:    
     x, y, theta = navigateToWaypoint(84, 30, 0, 104, 30)
     print("x y theta ", x, y, theta)
-    x, y, theta = navigateToWaypoint(x, y, theta, 124, 30)
+    x, y, theta = navigateToWaypoint(x, y, theta, 104, 30)
     print("x y theta ", x, y, theta)
-    x, y, theta = navigateToWaypoint(x, y, theta, 144, 30)
+    x, y, theta = navigateToWaypoint(x, y, theta, 104, 30)
 
 
 except KeyboardInterrupt:

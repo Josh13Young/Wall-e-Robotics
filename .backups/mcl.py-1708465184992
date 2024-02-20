@@ -119,106 +119,22 @@ def update_weights(sonar):
     resample()
     print("drawParticles:" + str(particles))
 
-def update_weights_rotate(sonar):
-    global particles
-    dist = 20
-    global wall
-    new_particles = []
-    for i in range(len(particles)):
-        theta = particles[i][2]
-        g = random.gauss(0, 0.01)
-        lst = list(particles[i])
-        lst[2] += -math.pi/2 + g
-        particle = tuple(lst)
-        new_particles.append(particle)
-        likelihood = calculate_likelihood(lst[0], lst[1], lst[2], sonar)
-        if not wall:
-            continue
-        if calc_angle(theta, wall) > 15:
-            print(calc_angle(theta, wall))
-            continue
-        weights[i] = likelihood * weights[i]
-    particles = new_particles
-    norm()
-    resample()
-    print("drawParticles:" + str(particles))
-
-def navigateToWaypoint(x, y, theta, wx, wy):
-    centimeter = (833 / 40)
-    rotate = 1080
-    x_new, y_new = wx - x, wy - y
-    angle = math.degrees(math.atan2(y_new, x_new)) - theta
-    dist = math.sqrt(x_new**2 + y_new**2)
-    pos_r = BP.get_motor_encoder(motorR)
-    pos_l = BP.get_motor_encoder(motorL)
-
-    motorDriveAmount = centimeter * dist
-    print("angle: " + str(angle))
-    if angle < -180:
-        angle += 360
-    elif angle > 180:
-        angle -= 360
-    motorTurnAmount = rotate * (angle / 360)
-    BP.set_motor_position(motorR, pos_r + motorTurnAmount)
-    BP.set_motor_position(motorL, pos_l - motorTurnAmount)
-    time.sleep(1)
-
-    total_move = motorDriveAmount
-    """
-    Extract the division of 20 centimeter steps outside of this function, so that it moves 20cms
-    then calculates the average x, y and theta of the particles and uses this as it's next position to start from
-    
-    """
-    while total_move > centimeter * 20:
-        pos_r = BP.get_motor_encoder(motorR)
-        pos_l = BP.get_motor_encoder(motorL)
-        BP.set_motor_position(motorR, pos_r + centimeter * 20)
-        BP.set_motor_position(motorL, pos_l + centimeter * 20)
-        thing()
-        total_move -= centimeter * 20
-        print("total move", total_move)
-    pos_r = BP.get_motor_encoder(motorR)
-    pos_l = BP.get_motor_encoder(motorL)
-    BP.set_motor_position(motorR, pos_r + total_move)
-    BP.set_motor_position(motorL, pos_l + total_move)
-    thing()
-    nx, ny, ntheta = get_avgs()
-    time.sleep(1)
-    #return wx, wy, theta + angle
-    return nx, ny, ntheta
-
-# TODO: change name of 
-def thing():
-    time.sleep(1)
-    sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
-    print(sonars)
-    sonar = sum(sonars) / len(sonars)
-    update_weights(sonar)
-    print(weights)
-    print(particles)
-    canvas.drawParticles(particles)
-    time.sleep(1)
-
-def get_avgs():
-    global particles
-    global weights
-    x_bar = sum([weights[i] * particles[i][0] for i in range(len(particles))])
-    y_bar = sum([weights[i] * particles[i][1] for i in range(len(particles))])
-    theta_bar = sum([weights[i] * particles[i][2] for i in range(len(particles))])
-    return x_bar, y_bar, theta_bar
-
 try:
     bot = Bot()
     posControlBot = PositionControlBot(bot, 200)
     mymap.draw()
     print(bot.get_ultrasonic_sensor_value())
-    #while True:    
-    x, y, theta = navigateToWaypoint(84, 30, 0, 104, 30)
-    print("x y theta ", x, y, theta)
-    x, y, theta = navigateToWaypoint(x, y, theta, 124, 30)
-    print("x y theta ", x, y, theta)
-    x, y, theta = navigateToWaypoint(x, y, theta, 144, 30)
-
-
+    while True:    
+        posControlBot.move_forward(833/2)
+        time.sleep(1)
+        sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
+        print(sonars)
+        sonar = sum(sonars) / len(sonars)
+        update_weights(sonar)
+        print(weights)
+        print(particles)
+        canvas.drawParticles(particles)
+        time.sleep(1)
+                
 except KeyboardInterrupt:
     BP.reset_all()
