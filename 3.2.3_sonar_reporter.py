@@ -1,22 +1,14 @@
-import time
-import brickpi3
+from bot_control.Bot import Bot
 
-BP = brickpi3.BrickPi3()
-
-BP.set_sensor_type(BP.PORT_3, BP.SENSOR_TYPE.NXT_ULTRASONIC)
-
-try:
+def main():
+    bot = Bot()
+    
     while True:
-        try:
-            value = BP.get_sensor(BP.PORT_3)
-            print(f"Distance: {value}cm")
-        except brickpi3.SensorError as error:
-            print(error)
-     
-        time.sleep(0.02)
+        measurement = bot.get_ultrasonic_sensor_value()
+        print(f"Distance: {measurement}cm")
 
-except KeyboardInterrupt:
-    BP.reset_all()
+if __name__ == "__main__":
+    main()
 
 '''
 Distances measured from the front of the top of sonar.

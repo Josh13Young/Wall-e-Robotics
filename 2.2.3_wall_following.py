@@ -5,7 +5,7 @@ The robot will use its ultrasonic sensor to maintain a set distance
 
 from collections import deque
 
-from common import main_wrapper, curse_print
+from common import main_wrapper
 from bot_control.Bot import Bot
 from bot_control.VelocityControl import VelocityControlBot
 import time
