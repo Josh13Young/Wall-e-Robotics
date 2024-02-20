@@ -95,7 +95,8 @@ mymap.add_wall((210,84,210,0))     # g
 mymap.add_wall((210,0,0,0))        # h
 mymap.add_wall((84,30,180,30))     # waypoint walls
 mymap.add_wall((180,30,180,54))     # waypoint walls
-mymap.add_wall((180,54,138,168))     # waypoint walls
+mymap.add_wall((180,54,138,54))     # waypoint walls
+mymap.add_wall((138,54,138,168))     # waypoint walls
 mymap.add_wall((138,168,114,168))     # waypoint walls
 mymap.add_wall((114,168,114,84))     # waypoint walls
 mymap.add_wall((114,84,84,84))     # waypoint walls
