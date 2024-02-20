@@ -57,24 +57,23 @@ def navigateToWaypoint(wx, wy):
 
 
 try:
-        while True:
-                #inp_x = stdscr.getkey() 
-                #inp_y = stdscr.getkey()
-                stdscr.clear()
-                stdscr.addstr(0, 0, "Waypoint coordinate in format x,y")
-                stdscr.refresh()
-                curses.echo()
-                inp = stdscr.getstr(1,0).decode(encoding='utf-8')
-                curses.noecho()
-                x_str, y_str = map(str.strip, inp.split(','))
-                inp_x = float(x_str)
-                inp_y = float(y_str)         
-                print(f"moving to ({inp_x}, {inp_y})")  
-                navigateToWaypoint(inp_x, inp_y)
-
-                time.sleep(0.01)
+    while True:
+            #inp_x = stdscr.getkey() 
+            #inp_y = stdscr.getkey()
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Waypoint coordinate in format x,y")
+            stdscr.refresh()
+            curses.echo()
+            inp = stdscr.getstr(1,0).decode(encoding='utf-8')
+            curses.noecho()
+            x_str, y_str = map(str.strip, inp.split(','))
+            inp_x = float(x_str)
+            inp_y = float(y_str)         
+            print(f"moving to ({inp_x}, {inp_y})")  
+            navigateToWaypoint(inp_x, inp_y)
+            time.sleep(0.01)
 except KeyboardInterrupt:
-        stop()
-        BP.reset_all()
+    stop()
+    BP.reset_all()
         
 
