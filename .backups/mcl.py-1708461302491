@@ -105,6 +105,8 @@ def update_weights(sonar):
         lst[1] += (dist + e) * math.sin(theta)
         lst[2] += f
         particle = tuple(lst)
+        print(f"x {lst[0]} y {lst[1]} theta {lst[2]}")
+        print(f"particles[i] {particles[i]}")
         new_particles.append(particle)
         
         likelihood = calculate_likelihood(lst[0], lst[1], lst[2], sonar)
@@ -126,7 +128,7 @@ try:
     print(bot.get_ultrasonic_sensor_value())
     while True:    
         posControlBot.move_forward(833/2)
-        time.sleep(1)
+        time.sleep(3)
         sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
         print(sonars)
         sonar = sum(sonars) / len(sonars)
@@ -134,7 +136,7 @@ try:
         print(weights)
         print(particles)
         canvas.drawParticles(particles)
-        time.sleep(1)
+        time.sleep(3)
                 
 except KeyboardInterrupt:
     BP.reset_all()

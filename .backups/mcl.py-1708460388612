@@ -93,28 +93,25 @@ def update_weights(sonar):
     global particles
     dist = 20
     global wall
-    new_particles = []
     for i in range(len(particles)):
         e = random.gauss(0, 0.02)
         f = random.gauss(0, 0.015)
 
-        theta = particles[i][2]
-
-        lst = list(particles[i])
-        lst[0] += (dist + e) * math.cos(theta)
-        lst[1] += (dist + e) * math.sin(theta)
-        lst[2] += f
-        particle = tuple(lst)
-        new_particles.append(particle)
+        x, y, theta = particles[i]  # Unpack the tuple
+        x += (dist + e) * math.cos(theta)
+        y += (dist + e) * math.sin(theta)
+        theta += f
+        print(f"x {x} y {y} theta {theta}")
+        print(f"particles[i] {particles[i]}")
+        particles[i] = (x, y, theta)
         
-        likelihood = calculate_likelihood(lst[0], lst[1], lst[2], sonar)
+        likelihood = calculate_likelihood(x, y, theta, sonar)
         if not wall:
             continue
         if calc_angle(theta, wall) > 15:
             print(calc_angle(theta, wall))
             continue
         weights[i] = likelihood * weights[i]
-    particles = new_particles
     norm()
     resample()
     print("drawParticles:" + str(particles))
@@ -126,7 +123,7 @@ try:
     print(bot.get_ultrasonic_sensor_value())
     while True:    
         posControlBot.move_forward(833/2)
-        time.sleep(1)
+        time.sleep(3)
         sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
         print(sonars)
         sonar = sum(sonars) / len(sonars)
@@ -134,7 +131,7 @@ try:
         print(weights)
         print(particles)
         canvas.drawParticles(particles)
-        time.sleep(1)
+        time.sleep(3)
                 
 except KeyboardInterrupt:
     BP.reset_all()

@@ -105,6 +105,8 @@ def update_weights(sonar):
         lst[1] += (dist + e) * math.sin(theta)
         lst[2] += f
         particle = tuple(lst)
+        print(f"x {lst[0]} y {lst[1]} theta {lst[2]}")
+        print(f"particles[i] {particles[i]}")
         new_particles.append(particle)
         
         likelihood = calculate_likelihood(lst[0], lst[1], lst[2], sonar)
