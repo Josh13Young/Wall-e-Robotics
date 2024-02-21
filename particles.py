@@ -4,6 +4,5 @@ from bot_control.PositionControl import PositionControlBot, Bot
 
 if __name__ == "__main__":
     bot = Bot()
-    bot.reset_bp()
     posControlBot = PositionControlBot(bot, 200)
     posControlBot.move_square_10(forward_dist=833, turn_amount=270)

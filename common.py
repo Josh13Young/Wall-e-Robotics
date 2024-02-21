@@ -16,7 +16,7 @@ def cleanup():
     curses.nocbreak()
     curses.echo()
     curses.endwin()
-    Bot.reset_bp()
+    Bot._reset_bp()
 
 
 @dataclass

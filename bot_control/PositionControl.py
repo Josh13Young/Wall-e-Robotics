@@ -1,11 +1,11 @@
 import time
 import math
 import random
-from bot_control.Bot import Bot, ControlBot
+from bot_control.BotInterface import BotInterface, ControlBot
 
 
 class PositionControlBot(ControlBot):
-    def __init__(self, bot: Bot, base_move_dist: int = 800, turn_amount: int = 250):
+    def __init__(self, bot: BotInterface, base_move_dist: int = 800, turn_amount: int = 250):
         super().__init__(bot)
         self.base_move_dist = base_move_dist
         self.turn_amount = turn_amount

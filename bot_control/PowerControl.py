@@ -1,8 +1,8 @@
-from bot_control.Bot import Bot, ControlBot
+from bot_control.BotInterface import BotInterface, ControlBot
 
 
 class PowerControlBot(ControlBot):
-    def __init__(self, bot: Bot, speed):
+    def __init__(self, bot: BotInterface, speed):
         super().__init__(bot)
         self.speed = speed
 

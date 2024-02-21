@@ -1,20 +1,20 @@
-import brickpi3
+try:
+  import brickpi3
+except:
+  pass
+
 import random
 
-from abc import ABC
-from collections import namedtuple
+from BotInterface import BotInterface, MotorStatus
 import time
-
-MotorStatus = namedtuple(
-    "MotorStatus", ["status_flag", "power_percent", "encoder_pos", "velocity_dps"]
-)
+import math
 
 
-class Bot:
+class Bot(BotInterface):
     BP: brickpi3.BrickPi3 = None
 
     @staticmethod
-    def reset_bp():
+    def _reset_bp():
         if Bot.BP:
             Bot.BP.reset_all()
 
@@ -25,7 +25,7 @@ class Bot:
         else:
             self.BP = Bot.BP
 
-        Bot.reset_bp()  # ensure everything is unconfigured
+        Bot._reset_bp()  # ensure everything is unconfigured
 
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
@@ -112,20 +112,3 @@ class Bot:
                 pass
             time.sleep(0.02)
         return value
-
-
-class ControlBot(ABC):
-    def __init__(self, bot: Bot, motor_limit: int = 50):
-        self.bot = bot
-        self.bot.set_motor_limits(motor_limit)
-
-    def stop(self):
-        self.bot.reset_motor_power()
-
-    def wait_for_movement_completion(self):
-        dps_l = self.bot.get_left_velocity_dps()
-        dps_r = self.bot.get_right_velocity_dps()
-        while dps_l != 0 or dps_r != 0:
-            time.sleep(0.1)
-            dps_l = self.bot.get_left_velocity_dps()
-            dps_r = self.bot.get_right_velocity_dps()

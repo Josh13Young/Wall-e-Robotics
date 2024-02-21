@@ -3,7 +3,8 @@ This simply allows you to control the bot via power control
 """
 
 from common import main_wrapper, curse_print, ControlProcedure
-from bot_control.PowerControl import PowerControlBot, Bot
+from bot_control.PowerControl import PowerControlBot
+from bot_control.Bot import Bot
 
 
 def control_loop(posBot: PowerControlBot, letter: str):

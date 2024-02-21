@@ -3,11 +3,11 @@ The LEGO motors have PID control for velocity built in,
   so velocity control on our end just becomes "set the velocity"
 """
 
-from bot_control.Bot import Bot, ControlBot
+from bot_control.BotInterface import BotInterface, ControlBot
 
 
 class VelocityControlBot(ControlBot):
-    def __init__(self, bot: Bot, default_dps: int):
+    def __init__(self, bot: BotInterface, default_dps: int):
         super().__init__(bot)
         self.default_dps = default_dps
 

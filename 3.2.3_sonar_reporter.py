@@ -1,7 +1,7 @@
-from bot_control.Bot import Bot
+from bot_control.TestBot import TestBot
 
 def main():
-    bot = Bot()
+    bot = TestBot()
     
     while True:
         measurement = bot.get_ultrasonic_sensor_value()

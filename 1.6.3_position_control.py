@@ -8,7 +8,8 @@ This makes the robot move in a square using position control, callibrated by
 """
 
 from common import main_wrapper, curse_print, ControlProcedure
-from bot_control.PositionControl import PositionControlBot, Bot
+from bot_control.PositionControl import PositionControlBot
+from bot_control.Bot import Bot
 
 
 def control_loop(posBot: PositionControlBot, letter: str):
