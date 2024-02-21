@@ -25,8 +25,6 @@ class Positions:
 
     # Calculates new nx, ny, ntheta of the robot
     def get_new_avg_pos(self):
-        global particles
-        global weights
         x_bar = sum([self.weights[i] * self.particles[i][0] for i in range(len(self.particles))])
         y_bar = sum([self.weights[i] * self.particles[i][1] for i in range(len(self.particles))])
         theta_bar = sum([self.weights[i] * self.particles[i][2] for i in range(len(self.particles))])
@@ -123,12 +121,13 @@ def calculate_likelihood(x, y, theta, z):
 
 
 # Handles the mcl steps
-def mcl_update(was_turn, x, y, theta):
+def mcl_update(was_turn, x, y, theta, distance, angle):
     sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
     sonar = sum(sonars) / len(sonars)   # Avg sonar readings
-    _, wall = find_dist_to_closest_wall(x, y, theta)
     # Skip all weight/mcl updates if angle to closest wall is > 15
+    _, wall = find_dist_to_closest_wall(x, y, theta)
     skip_update = calc_angle(theta, wall) > 15
+    
     new_particles = []
     if not was_turn:   # Do random gauss + likelihood for forward motion
         for i in range(len(positions.particles)):
@@ -136,8 +135,8 @@ def mcl_update(was_turn, x, y, theta):
             f = random.gauss(0, 0.015)
             theta = positions.particles[i][2]
             lst = list(positions.particles[i])
-            lst[0] += (20 + e) * math.cos(theta)
-            lst[1] += (20 + e) * math.sin(theta)
+            lst[0] += (distance + e) * math.cos(theta)
+            lst[1] += (distance + e) * math.sin(theta)
             lst[2] += f
             particle = tuple(lst)
             new_particles.append(particle)
@@ -151,7 +150,7 @@ def mcl_update(was_turn, x, y, theta):
             theta = positions.particles[i][2]
             g = random.gauss(0, 0.01)
             lst = list(positions.particles[i])
-            lst[2] += -math.pi/2 + g
+            lst[2] += angle + g
             particle = tuple(lst)
             new_particles.append(particle)
 
@@ -190,20 +189,22 @@ def move_robot(x, y, theta, wx, wy):
     pos_l = BP.get_motor_encoder(motorL)
     BP.set_motor_position(motorR, pos_r + motorTurnAmount)
     BP.set_motor_position(motorL, pos_l - motorTurnAmount)
-    mcl_update(True, x, y, theta)     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
+    mcl_update(True, x, y, theta, 0, math.radians(angle))     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
     time.sleep(1)
     
     # Move 20 else the remainder
     if motorDriveAmount > 20:
         motionAmount = centimeter * 20
+        dist = 20
     else:
         motionAmount = motorDriveAmount
+        dist = motionAmount / centimeter
     pos_r = BP.get_motor_encoder(motorR)
     pos_l = BP.get_motor_encoder(motorL)
     BP.set_motor_position(motorR, pos_r + motionAmount)
     BP.set_motor_position(motorL, pos_l + motionAmount)
     time.sleep(1)
-    nx, ny, ntheta = mcl_update(False, x, y, theta)
+    nx, ny, ntheta = mcl_update(False, x, y, theta, dist, 0)
     return nx, ny, ntheta + angle   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
 
 # Continuously moves robot towards given waypoint until within threshhold distance
@@ -218,8 +219,9 @@ def navigateToWaypoint(x, y, theta, wx, wy):
 # Moves robot to all waypoints
 def navigateToAllWaypoints(x, y, theta):
     waypoints = [(180, 30), (180, 54), (138, 54), (138, 168), (114, 168), (114, 84), (84, 84), (84, 30)]
+    nx, ny, ntheta = x, y, theta
     for wx, wy in waypoints:
-        nx, ny, ntheta = navigateToWaypoint(x, y, theta, wx, wy)
+        nx, ny, ntheta = navigateToWaypoint(nx, ny, ntheta, wx, wy)
         time.sleep(1)
 
 # MAIN:
