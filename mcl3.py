@@ -3,13 +3,18 @@ import math
 import random
 import time
 from particleDataStructures import canvas, mymap
-import brickpi3
-BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
-motorR = BP.PORT_C # right motor
-motorL = BP.PORT_B # left motor
-from bot_control.PositionControl import Bot
-bot = Bot()
-bot.set_motor_limits(35)
+# import brickpi3
+# BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
+# motorR = BP.PORT_C # right motor
+# motorL = BP.PORT_B # left motor
+from bot_control.TestBot import TestBot
+from bot_control.PositionControl import PositionControlBot
+bot = PositionControlBot(TestBot())
+bot.bot.set_motor_limits(35)
+
+from typing import Tuple
+
+STANDARD_SLEEP_AMOUNT = 0.1
 
 ##  Holds the particles and weights (NO MORE GLOBAL 😁)
 class Positions:
@@ -85,35 +90,64 @@ def calc_angle(theta, wall):
 
     return (math.acos(num/den))
 
+def distance(point1: Tuple[float, float], point2: Tuple[float, float]):
+    x_1, y_1 = point1
+    x_2, y_2 = point2
+    return math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2)**2)
+
 # Forward distance between the robot and a wall
 def wall_dist(x, y, theta, wall):
-    (a_x, a_y), (b_x, b_y) = wall
+    a, b = wall
+    (a_x, a_y) = a
+    (b_x, b_y) = b
+
     q = (b_y - a_y)*(math.cos(theta)) 
     r = (b_x - a_x)*(math.sin(theta))
     if (q - r) == 0:
-        return float('inf')
+        return math.inf
     m = ((b_y - a_y)*(a_x - x) - (b_x - a_x)*(a_y - y)) / (q-r)
-    x_satisfied = (a_x <= x + m * math.cos(theta) <= b_x or b_x <= x + m * math.cos(theta) <= a_x)
-    y_satisfied = (a_y <= y + m * math.sin(theta) <= b_y or b_y <= y + m * math.sin(theta) <= a_y)
-    print("x" + str(x_satisfied) + " y" + str(y_satisfied))
-    if x_satisfied and y_satisfied:
+
+    offset_x = x + m * math.cos(theta)
+    offset_y = y + m * math.sin(theta)
+    o = (offset_x, offset_y)
+    
+    lb_x, ub_x = sorted([a_x, b_x])
+    lb_y, ub_y = sorted([a_y, b_y])
+
+    # reason for errors was floating point errors, i.e 0 <= -0.00000000001 <= 0 isn't true
+    if lb_x <= round(offset_x, 6) <= ub_x and lb_y <= round(offset_y, 6) <= ub_y:
         return m
-    return float('inf')
+
+    # -- valid alternate method not relying on assumption that o is already on the line ab
+    # ao = distance(a, o)
+    # ob = distance(o, b)
+    # ab = distance(a, b)
+
+    # if (ao + ob) - ab < 10**(-10): # approximately on the line - allowing for floating point error
+    #     return m
+
+    return math.inf
 
 # Returns the distance to the closest wall and the wall which robot should be facing
 def find_dist_to_closest_wall(x, y, theta) -> tuple[float, tuple[float, float]] :
     min_m = float('inf')
     min_wall = None
+
+    ms = []
     for wall in walls.values():
         
         m = wall_dist(x, y, theta, wall)
+        ms.append(m)
         if m < 0:
             continue
-        if m < min_m:
+        if m < min_m and m < math.inf:
             min_m = m
             min_wall = wall
 
     if min_wall is None:
+        # print(positions.particles)
+        print(x, y, theta)
+        print(ms)
         raise ValueError("Robot is not facing any wall. Enclosed arena assumption violated.")
       
     return min_m, min_wall
@@ -130,12 +164,11 @@ def calculate_likelihood(x, y, theta, z):
 
 # Handles the mcl steps
 def mcl_update(was_turn, x, y, theta, distance, angle):
-    sonars = [bot.get_ultrasonic_sensor_value() for _ in range(10)]
+    sonars = [bot.bot.get_ultrasonic_sensor_value() for _ in range(10)]
     sonar = sum(sonars) / len(sonars)   # Avg sonar readings
     # Skip all weight/mcl updates if angle to closest wall is > 15
     _, wall = find_dist_to_closest_wall(x, y, theta)
     skip_update = calc_angle(theta, wall) > 15
-
     new_particles = []
     if not was_turn:   # Do random gauss + likelihood for forward motion
         for i in range(len(positions.particles)):
@@ -165,7 +198,7 @@ def mcl_update(was_turn, x, y, theta, distance, angle):
             if not skip_update:
                 likelihood = calculate_likelihood(lst[0], lst[1], lst[2], sonar)
                 positions.weights[i] = likelihood * positions.weights[i]
-    
+
     positions.particles = new_particles
 
     if not skip_update:
@@ -173,6 +206,7 @@ def mcl_update(was_turn, x, y, theta, distance, angle):
         positions.resample()
     
     positions.draw()
+    # print(positions.particles)
     return positions.get_new_avg_pos()
 
 
@@ -185,7 +219,7 @@ def move_robot(x, y, theta, wx, wy):
     dist = math.sqrt(x_new**2 + y_new**2)
     motorDriveAmount = centimeter * dist    # How much the wheels turn to reach the waypoint forward
 
-    print("angle: " + str(angle))
+    # print("angle: " + str(angle))
     if angle < -180:
         angle += 360
     elif angle > 180:
@@ -193,12 +227,13 @@ def move_robot(x, y, theta, wx, wy):
     motorTurnAmount = rotate * (angle / 360)    # How much the wheels turn to reach the waypoint turning
 
     
-    pos_r = BP.get_motor_encoder(motorR)
-    pos_l = BP.get_motor_encoder(motorL)
-    BP.set_motor_position(motorR, pos_r + motorTurnAmount)
-    BP.set_motor_position(motorL, pos_l - motorTurnAmount)
+    # pos_r = BP.get_motor_encoder(motorR)
+    # pos_l = BP.get_motor_encoder(motorL)
+    # BP.set_motor_position(motorR, pos_r + motorTurnAmount)
+    # BP.set_motor_position(motorL, pos_l - motorTurnAmount)
+    bot.turn_right(motorTurnAmount)
     mcl_update(True, x, y, theta, 0, math.radians(angle))     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
-    time.sleep(1.5)
+    time.sleep(STANDARD_SLEEP_AMOUNT)
     
     # Move 20 else the remainder
     if motorDriveAmount > centimeter * 20:
@@ -206,11 +241,12 @@ def move_robot(x, y, theta, wx, wy):
         dist = 20
     else:
         motionAmount = motorDriveAmount
-    pos_r = BP.get_motor_encoder(motorR)
-    pos_l = BP.get_motor_encoder(motorL)
-    BP.set_motor_position(motorR, pos_r + motionAmount)
-    BP.set_motor_position(motorL, pos_l + motionAmount)
-    time.sleep(1)
+    # pos_r = BP.get_motor_encoder(motorR)
+    # pos_l = BP.get_motor_encoder(motorL)
+    # BP.set_motor_position(motorR, pos_r + motionAmount)
+    # BP.set_motor_position(motorL, pos_l + motionAmount)
+    bot.move_forward(motionAmount)
+    time.sleep(STANDARD_SLEEP_AMOUNT)
     nx, ny, ntheta = mcl_update(False, x, y, theta, dist, 0)
     print(nx, ny, ntheta)
     return nx, ny, ntheta + angle   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
@@ -230,14 +266,12 @@ def navigateToAllWaypoints(x, y, theta):
     nx, ny, ntheta = x, y, theta
     for wx, wy in waypoints:
         nx, ny, ntheta = navigateToWaypoint(nx, ny, ntheta, wx, wy)
-        time.sleep(1)
+        time.sleep(STANDARD_SLEEP_AMOUNT)
 
 # MAIN:
-try:
-    mymap.draw()
-    waypoint1 = (84, 30, 0)
-    navigateToAllWaypoints(waypoint1[0], waypoint1[1], waypoint1[2])
+
+mymap.draw()
+waypoint1 = (84, 30, 0)
+navigateToAllWaypoints(waypoint1[0], waypoint1[1], waypoint1[2])
     
 
-except KeyboardInterrupt:
-    BP.reset_all()

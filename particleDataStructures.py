@@ -6,6 +6,8 @@ import time
 import random
 import math
 
+printFn = print
+
 # Functions to generate some dummy particles data:
 def calcX():
     return random.gauss(80,3) + 70*(math.sin(t)) # in cm
@@ -34,11 +36,11 @@ class Canvas:
         y1 = self.__screenY(line[1])
         x2 = self.__screenX(line[2])
         y2 = self.__screenY(line[3])
-        print ("drawLine:" + str((x1,y1,x2,y2)))
+        printFn ("drawLine:" + str((x1,y1,x2,y2)))
 
     def drawParticles(self,data):
         display = [(self.__screenX(d[0]),self.__screenY(d[1])) + d[2:] for d in data]
-        print("drawParticles:" + str(display))
+        printFn("drawParticles:" + str(display))
 
     def __screenX(self,x):
         return (x + self.margin)*self.scale
@@ -48,7 +50,10 @@ class Canvas:
 
 # A Map class containing walls
 class Map:
-    def __init__(self):
+    def __init__(self, do_print=True):
+        global printFn
+        if not do_print:
+            printFn = lambda s: None
         self.walls = []
 
     def add_wall(self,wall):
@@ -75,7 +80,7 @@ class Particles:
 
 canvas = Canvas()    # global canvas we are going to draw on
 
-mymap = Map()
+mymap = Map(do_print=False)
 # Definitions of walls
 # a: O to A
 # b: A to B
