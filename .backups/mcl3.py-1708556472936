@@ -269,7 +269,7 @@ def move_robot(x, y, theta, wx, wy):
 def navigateToWaypoint(x, y, theta, wx, wy):
     threshhold = 0.01  # Used to decide whether to keep moving towards waypoint
     nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
-    while True:
+    while (abs(nx - wx) > threshhold and abs(ny - wy) > threshhold):
         x, y, theta = nx, ny, ntheta
         nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
     return nx, ny, ntheta

@@ -6,10 +6,6 @@ import time
 import random
 import math
 
-import os
-rpi_str = "raspberrypi"
-is_rpi = os.uname().nodename == rpi_str
-
 printFn = print
 
 # Functions to generate some dummy particles data:
@@ -84,7 +80,7 @@ class Particles:
 
 canvas = Canvas()    # global canvas we are going to draw on
 
-mymap = Map(do_print=is_rpi)
+mymap = Map(do_print=False)
 # Definitions of walls
 # a: O to A
 # b: A to B

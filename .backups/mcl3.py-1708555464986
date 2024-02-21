@@ -229,16 +229,16 @@ def move_robot(x, y, theta, wx, wy):
     centimeter = 833 / 40
     rotate = 1080
     x_new, y_new = wx - x, wy - y
-    angle = (math.atan2(y_new, x_new)) - theta
+    angle = math.degrees(math.atan2(y_new, x_new)) - theta
     dist = math.sqrt(x_new**2 + y_new**2)
     motorDriveAmount = centimeter * dist    # How much the wheels turn to reach the waypoint forward
 
     # print("angle: " + str(angle))
-    if angle < -math.pi:
-        angle += math.tau
-    elif angle > math.pi:
-        angle -= math.tau
-    motorTurnAmount = rotate * (angle / math.tau)    # How much the wheels turn to reach the waypoint turning
+    if angle < -180:
+        angle += 360
+    elif angle > 180:
+        angle -= 360
+    motorTurnAmount = rotate * (angle / 360)    # How much the wheels turn to reach the waypoint turning
 
     
     # pos_r = BP.get_motor_encoder(motorR)
@@ -262,13 +262,14 @@ def move_robot(x, y, theta, wx, wy):
     bot.move_forward(motionAmount)
     time.sleep(STANDARD_SLEEP_AMOUNT)
     nx, ny, ntheta = mcl_update(False, x, y, theta, dist, 0)
-    print(nx, ny, math.degrees(ntheta))
+    print(nx, ny, ntheta)
     return nx, ny, ntheta + angle   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
 
 # Continuously moves robot towards given waypoint until within threshhold distance
 def navigateToWaypoint(x, y, theta, wx, wy):
-    threshhold = 0.01  # Used to decide whether to keep moving towards waypoint
+    threshhold = 1  # Used to decide whether to keep moving towards waypoint
     nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
+    # while (abs(nx - wx) > threshhold and abs(ny - wy) > threshhold):
     while True:
         x, y, theta = nx, ny, ntheta
         nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
