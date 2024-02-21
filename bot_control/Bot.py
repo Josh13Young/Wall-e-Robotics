@@ -5,7 +5,7 @@ except:
 
 import random
 
-from BotInterface import BotInterface, MotorStatus
+from bot_control.BotInterface import BotInterface, MotorStatus
 import time
 import math
 

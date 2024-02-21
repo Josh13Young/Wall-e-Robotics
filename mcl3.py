@@ -7,14 +7,29 @@ from particleDataStructures import canvas, mymap
 # BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 # motorR = BP.PORT_C # right motor
 # motorL = BP.PORT_B # left motor
-from bot_control.TestBot import TestBot
+
+import os
+rpi_str = "raspberrypi"
+is_rpi = os.uname().nodename == rpi_str
+
+if rpi_str:
+    try:
+        from bot_control.Bot import Bot as PiBot
+    except:
+        pass
+else:
+    try:
+        from bot_contro.TestBot import TestBot as PiBot
+    except:
+        pass
+
 from bot_control.PositionControl import PositionControlBot
-bot = PositionControlBot(TestBot())
+bot = PositionControlBot(PiBot())
 bot.bot.set_motor_limits(35)
 
 from typing import Tuple
 
-STANDARD_SLEEP_AMOUNT = 0.1
+STANDARD_SLEEP_AMOUNT = 1.5
 
 ##  Holds the particles and weights (NO MORE GLOBAL 😁)
 class Positions:
