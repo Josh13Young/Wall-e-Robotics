@@ -19,7 +19,7 @@ if rpi_str:
         pass
 else:
     try:
-        from bot_contro.TestBot import TestBot as PiBot
+        from bot_control.TestBot import TestBot as PiBot
     except:
         pass
 
@@ -172,9 +172,9 @@ def find_dist_to_closest_wall(x, y, theta) -> tuple[float, tuple[float, float]] 
 def calculate_likelihood(x, y, theta, z):
     # TODO: Experiment with sigma and K
     sigma = 0.02
-    K = 0.5
+    K = 0.1
     m, _ = find_dist_to_closest_wall(x, y, theta)
-    return math.exp((-(-z-m)**2)/2*sigma**2) + K
+    return math.exp((-(-z-m)**2)/(2*sigma**2)) + K
 
 
 # Handles the mcl steps
@@ -189,10 +189,10 @@ def mcl_update(was_turn, x, y, theta, distance, angle):
         for i in range(len(positions.particles)):
             e = random.gauss(0, 0.02)
             f = random.gauss(0, 0.015)
-            theta = positions.particles[i][2]
+            th = positions.particles[i][2]
             lst = list(positions.particles[i])
-            lst[0] += (distance + e) * math.cos(theta)
-            lst[1] += (distance + e) * math.sin(theta)
+            lst[0] += (distance + e) * math.cos(th)
+            lst[1] += (distance + e) * math.sin(th)
             lst[2] += f
             particle = tuple(lst)
             new_particles.append(particle)
@@ -203,7 +203,6 @@ def mcl_update(was_turn, x, y, theta, distance, angle):
 
     else:   # Do random gauss + likelihood for turning motion
         for i in range(len(positions.particles)):
-            theta = positions.particles[i][2]
             g = random.gauss(0, 0.01)
             lst = list(positions.particles[i])
             lst[2] += angle + g
@@ -246,7 +245,7 @@ def move_robot(x, y, theta, wx, wy):
     # pos_l = BP.get_motor_encoder(motorL)
     # BP.set_motor_position(motorR, pos_r + motorTurnAmount)
     # BP.set_motor_position(motorL, pos_l - motorTurnAmount)
-    bot.turn_right(motorTurnAmount)
+    bot.turn_left(motorTurnAmount)
     mcl_update(True, x, y, theta, 0, math.radians(angle))     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
     time.sleep(STANDARD_SLEEP_AMOUNT)
     
@@ -270,7 +269,8 @@ def move_robot(x, y, theta, wx, wy):
 def navigateToWaypoint(x, y, theta, wx, wy):
     threshhold = 1  # Used to decide whether to keep moving towards waypoint
     nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
-    while (abs(nx - wx) > threshhold and abs(ny - wy) > threshhold):
+    # while (abs(nx - wx) > threshhold and abs(ny - wy) > threshhold):
+    while True:
         x, y, theta = nx, ny, ntheta
         nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
     return nx, ny, ntheta
