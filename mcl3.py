@@ -215,6 +215,7 @@ def mcl_update(was_turn, x, y, theta, distance, angle):
 def move_robot(x, y, theta, wx, wy):
     centimeter = 833 / 40
     rotate = 1080
+    
     x_new, y_new = wx - x, wy - y
     angle = (math.atan2(y_new, x_new)) - theta
     dist = math.sqrt(x_new**2 + y_new**2)
@@ -233,7 +234,7 @@ def move_robot(x, y, theta, wx, wy):
     # BP.set_motor_position(motorR, pos_r + motorTurnAmount)
     # BP.set_motor_position(motorL, pos_l - motorTurnAmount)
     bot.turn_right(motorTurnAmount)
-    mcl_update(True, x, y, theta, 0, math.radians(angle))     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
+    nx, ny, ntheta = mcl_update(True, x, y, theta, 0, angle)     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
     time.sleep(STANDARD_SLEEP_AMOUNT)
     
     # Move 20 else the remainder
@@ -248,9 +249,9 @@ def move_robot(x, y, theta, wx, wy):
     # BP.set_motor_position(motorL, pos_l + motionAmount)
     bot.move_forward(motionAmount)
     time.sleep(STANDARD_SLEEP_AMOUNT)
-    nx, ny, ntheta = mcl_update(False, x, y, theta, dist, 0)
-    print(nx, ny, math.degrees(ntheta))
-    return nx, ny, ntheta + angle   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
+    nnx, nny, nntheta = mcl_update(False, nx, ny, ntheta, dist, 0)
+    print(f"New position: ({nx}, {ny}, {math.degrees(ntheta)})")
+    return nnx, nny, nntheta   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
 
 # Continuously moves robot towards given waypoint until within threshhold distance
 def navigateToWaypoint(x, y, theta, wx, wy):
