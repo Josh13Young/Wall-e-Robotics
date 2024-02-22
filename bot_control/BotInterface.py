@@ -91,13 +91,15 @@ class ControlBot(ABC):
     def wait_for_movement_completion(self):
         dps_l = self.bot.get_left_velocity_dps()
         dps_r = self.bot.get_right_velocity_dps()
-        start_time = time.time()
+        mark_time = time.time()
         while dps_l != 0 or dps_r != 0: # assume up to 0.5s will be taken to do movements
-            if start_time - time.time() >= 0.5:
-                print("     -> we've slept for over 0.5s waiting for the robot to stop moving")
-                return
+            if mark_time - time.time() >= 0.5:
+                print("     -> we've slept for another 0.5s waiting for the robot to stop moving")
+                if abs(dps_l) < 10**-4 and abs(dps_r) < 10**-4:
+                    print("     -- detected nearly stopped movement, cancelling this")
+                    self.stop()
+                    return
             
             time.sleep(0.1)
             dps_l = self.bot.get_left_velocity_dps()
             dps_r = self.bot.get_right_velocity_dps()
-        self.stop()

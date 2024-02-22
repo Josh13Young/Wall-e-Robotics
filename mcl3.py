@@ -242,7 +242,7 @@ def calculate_move_amount(
 
 # Moves robot 20cm/remainder of drive amount, does the 4 mcl update steps and thats it
 def move_robot(x, y, theta, wx, wy):
-    distance, turn_angle = calculate_move_amount((x, y, theta), (wx, wy))
+    _, turn_angle = calculate_move_amount((x, y, theta), (wx, wy))
 
     # print("angle: " + str(angle))
     if turn_angle < -math.pi:
@@ -263,7 +263,7 @@ def move_robot(x, y, theta, wx, wy):
     )  # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
     time.sleep(STANDARD_SLEEP_AMOUNT)
     
-    distance, turn_angle = calculate_move_amount((nx, ny, ntheta), (wx, wy))
+    distance, _ = calculate_move_amount((nx, ny, ntheta), (wx, wy))
 
     # Move 20 else the remainder
     if distance > CENTIMETER * 20:
