@@ -5,10 +5,7 @@
 import time
 import random
 import math
-
-import os
-rpi_str = "raspberrypi"
-is_rpi = os.uname().nodename == rpi_str
+from common import WEB_PRINT
 
 printFn = print
 
@@ -84,7 +81,7 @@ class Particles:
 
 canvas = Canvas()    # global canvas we are going to draw on
 
-mymap = Map(do_print=is_rpi)
+mymap = Map(do_print=WEB_PRINT)
 # Definitions of walls
 # a: O to A
 # b: A to B

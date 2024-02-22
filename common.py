@@ -9,7 +9,36 @@ import curses
 import time
 import signal
 from dataclasses import dataclass
-from bot_control.Bot import Bot
+import sys
+import os
+
+rpi_str = "raspberrypi"
+IS_RPI = os.uname().nodename == rpi_str
+
+if IS_RPI:
+    try:
+        from bot_control.Bot import Bot as PiBot
+    except:
+        pass
+else:
+    try:
+        from bot_control.TestBot import TestBot as PiBot
+    except:
+        pass
+
+# Default verbosity level
+web_print = None
+
+# Check each argument in the command line
+for arg in sys.argv:
+    if arg == "WEB_PRINT=1":
+        web_print = 1
+        break
+    elif arg == "WEB_PRINT=0":
+        web_print = 0
+        break
+
+WEB_PRINT = (IS_RPI and web_print == None) or web_print == 1
 
 
 def cleanup():

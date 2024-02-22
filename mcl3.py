@@ -8,20 +8,7 @@ from particleDataStructures import canvas, mymap
 # motorR = BP.PORT_C # right motor
 # motorL = BP.PORT_B # left motor
 
-import os
-rpi_str = "raspberrypi"
-is_rpi = os.uname().nodename == rpi_str
-
-if is_rpi:
-    try:
-        from bot_control.Bot import Bot as PiBot
-    except:
-        pass
-else:
-    try:
-        from bot_control.TestBot import TestBot as PiBot
-    except:
-        pass
+from common import PiBot
 
 from bot_control.PositionControl import PositionControlBot
 bot = PositionControlBot(PiBot())
@@ -29,7 +16,7 @@ bot.bot.set_motor_limits(35)
 
 from typing import Tuple
 
-STANDARD_SLEEP_AMOUNT = 1.5
+STANDARD_SLEEP_AMOUNT = 0.01
 
 ##  Holds the particles and weights (NO MORE GLOBAL 😁)
 class Positions:
@@ -269,7 +256,7 @@ def move_robot(x, y, theta, wx, wy):
 def navigateToWaypoint(x, y, theta, wx, wy):
     threshhold = 0.01  # Used to decide whether to keep moving towards waypoint
     nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
-    while True:
+    while (abs(nx - wx) > threshhold and abs(ny - wy) > threshhold):
         x, y, theta = nx, ny, ntheta
         nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
     return nx, ny, ntheta
