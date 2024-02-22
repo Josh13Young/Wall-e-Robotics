@@ -26,6 +26,7 @@ class Bot(BotInterface):
             self.BP = Bot.BP
 
         Bot._reset_bp()  # ensure everything is unconfigured
+        time.sleep(0.3) # give it a bit to make sure this is the case
 
         self.motorR = self.BP.PORT_C
         self.motorL = self.BP.PORT_B
