@@ -91,7 +91,8 @@ class ControlBot(ABC):
     def wait_for_movement_completion(self):
         dps_l = self.bot.get_left_velocity_dps()
         dps_r = self.bot.get_right_velocity_dps()
-        while dps_l != 0 or dps_r != 0:
+        start_time = time.time()
+        while dps_l != 0 or dps_r != 0 and start_time - time.time() < 0.5: # assume up to 0.5s will be taken to do movements
             time.sleep(0.1)
             dps_l = self.bot.get_left_velocity_dps()
             dps_r = self.bot.get_right_velocity_dps()
