@@ -267,6 +267,7 @@ def navigateToAllWaypoints(x, y, theta):
     waypoints = [(180, 30), (180, 54), (138, 54), (138, 168), (114, 168), (114, 84), (84, 84), (84, 30)]
     nx, ny, ntheta = x, y, theta
     for wx, wy in waypoints:
+        print(f"Going towards new waypoint: ({wx}, {wy}, any)")
         nx, ny, ntheta = navigateToWaypoint(nx, ny, ntheta, wx, wy)
         time.sleep(STANDARD_SLEEP_AMOUNT)
 
