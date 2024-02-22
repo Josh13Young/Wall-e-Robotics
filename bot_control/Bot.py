@@ -112,6 +112,6 @@ class Bot(BotInterface):
             except brickpi3.SensorError:
                 if time.time() - mark_time > 0.5: # 0.2s have passed
                     mark_time = time.time()
-                    print("\t\t-> 0.2s have passed while trying to get a non garbage sensor reading")
+                    print("    -> 0.2s have passed while trying to get a non garbage sensor reading")
             time.sleep(0.02)
         return value
