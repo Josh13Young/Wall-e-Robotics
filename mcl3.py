@@ -233,7 +233,7 @@ def move_robot(x, y, theta, wx, wy):
     # pos_l = BP.get_motor_encoder(motorL)
     # BP.set_motor_position(motorR, pos_r + motorTurnAmount)
     # BP.set_motor_position(motorL, pos_l - motorTurnAmount)
-    bot.turn_right(motorTurnAmount)
+    bot.turn_left(motorTurnAmount)
     nx, ny, ntheta = mcl_update(True, x, y, theta, 0, angle)     # TODO: should the overall position change every turn? idts bc then it wont decide whether to move or turn again
     time.sleep(STANDARD_SLEEP_AMOUNT)
     
