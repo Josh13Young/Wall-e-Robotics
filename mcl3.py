@@ -12,7 +12,7 @@ import os
 rpi_str = "raspberrypi"
 is_rpi = os.uname().nodename == rpi_str
 
-if rpi_str:
+if is_rpi:
     try:
         from bot_control.Bot import Bot as PiBot
     except:
