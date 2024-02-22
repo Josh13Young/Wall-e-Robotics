@@ -250,7 +250,7 @@ def move_robot(x, y, theta, wx, wy):
     bot.move_forward(motionAmount)
     time.sleep(STANDARD_SLEEP_AMOUNT)
     nnx, nny, nntheta = mcl_update(False, nx, ny, ntheta, dist, 0)
-    print(f"New position: ({nx}, {ny}, {math.degrees(ntheta)})")
+    print(f"New position: ({nx}, {ny}, {math.degrees(ntheta)}), desired position: ({wx}, {wy}, any)")
     return nnx, nny, nntheta   # TODO: I think this is the correct way to update the overall position of the robot for the next iteration
 
 # Continuously moves robot towards given waypoint until within threshhold distance
