@@ -237,7 +237,7 @@ def calculate_move_amount(
     motorDriveAmount = (
         CENTIMETER * dist
     )  # How much the wheels turn to reach the waypoint forward
-    return angle, dist
+    return angle, motorDriveAmount
 
 
 # Moves robot 20cm/remainder of drive amount, does the 4 mcl update steps and thats it
