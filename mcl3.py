@@ -258,12 +258,12 @@ def navigateToWaypoint(x, y, theta, wx, wy):
     threshhold = 1  # Used to decide whether to keep moving towards waypoint
     nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
     while distance((nx, ny), (wx, wy)) > threshhold:
-        x, y, theta = nx, ny, ntheta
-        nx, ny, ntheta = move_robot(x, y, theta, wx, wy)
+        nx, ny, ntheta = move_robot(nx, ny, ntheta, wx, wy)
     return nx, ny, ntheta
 
 # Moves robot to all waypoints
 def navigateToAllWaypoints(x, y, theta):
+    print(f"Starting at: ({x}, {y}, {theta})")
     waypoints = [(180, 30), (180, 54), (138, 54), (138, 168), (114, 168), (114, 84), (84, 84), (84, 30)]
     nx, ny, ntheta = x, y, theta
     for wx, wy in waypoints:
