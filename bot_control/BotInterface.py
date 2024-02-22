@@ -100,3 +100,4 @@ class ControlBot(ABC):
             time.sleep(0.1)
             dps_l = self.bot.get_left_velocity_dps()
             dps_r = self.bot.get_right_velocity_dps()
+        self.stop()
