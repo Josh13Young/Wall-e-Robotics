@@ -16,7 +16,7 @@ bot.bot.set_motor_limits(35)
 
 from typing import Tuple
 
-STANDARD_SLEEP_AMOUNT = 0.01
+STANDARD_SLEEP_AMOUNT = 1.5
 
 ##  Holds the particles and weights (NO MORE GLOBAL 😁)
 class Positions:

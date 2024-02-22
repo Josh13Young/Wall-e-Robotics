@@ -104,11 +104,14 @@ class Bot(BotInterface):
     def get_ultrasonic_sensor_value(self) -> int:
         """Returns distance of obstacle in front of sensor (up to 255cm away)"""
         value = None
+        mark_time = time.time()
         while value == None:
             try:
                 reading = self.BP.get_sensor(self.BP.PORT_3)
                 value = reading
             except brickpi3.SensorError:
-                pass
+                if time.time() - mark_time > 0.5: # 0.2s have passed
+                    mark_time = time.time()
+                    print("0.2s have passed while trying to get a non garbage sensor reading")
             time.sleep(0.02)
         return value
