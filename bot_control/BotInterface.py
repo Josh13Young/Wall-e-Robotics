@@ -92,7 +92,11 @@ class ControlBot(ABC):
         dps_l = self.bot.get_left_velocity_dps()
         dps_r = self.bot.get_right_velocity_dps()
         start_time = time.time()
-        while dps_l != 0 or dps_r != 0 and start_time - time.time() < 0.5: # assume up to 0.5s will be taken to do movements
+        while dps_l != 0 or dps_r != 0: # assume up to 0.5s will be taken to do movements
+            if start_time - time.time() >= 0.5:
+                print("     -> we've slept for over 0.5s waiting for the robot to stop moving")
+                return
+            
             time.sleep(0.1)
             dps_l = self.bot.get_left_velocity_dps()
             dps_r = self.bot.get_right_velocity_dps()
